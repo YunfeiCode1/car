@@ -1,15 +1,57 @@
 #include<GL/glut.h>
 #include<cmath>
+#include <cstdio>
 
 
 int screenWidth = 800;
 int screenHeight = 800;
 int screenDepth = 600;
-
-
 double PI = 3.14;
-
 float ANGLE = 0.0f;
+
+int faces[6][4][3] = {
+        {
+                {1, -1, -1},
+                {-1, -1, -1},
+                {-1, 1, -1},
+                {1, 1, -1}
+        },
+        {
+                {1, -1, 1},
+                {-1, -1, 1},
+                {-1, 1, 1},
+                {1, 1, 1}
+        },
+        {
+                {-1, -1, 1},
+                {-1, -1, -1},
+                {-1, 1, -1},
+                {-1, 1, 1}
+        },
+        {
+                {1, -1, 1},
+                {1, -1, -1},
+                {1, 1, -1},
+                {1, 1, 1}
+        },
+        {
+                {1, -1, 1},
+                {1, -1, -1},
+                {-1, -1, -1},
+                {-1, -1, 1}
+        },
+        {
+                {1, 1, 1},
+                {1, 1, -1},
+                {-1, 1, -1},
+                {-1, 1, 1}
+        }
+};
+
+GLUquadricObj *quadratic = gluNewQuadric();
+void reshape(GLint w, GLint h);
+GLuint loadBMP_custom(const char * imagepath);
+
 void init(void)
 {
     GLfloat lgt1_diffuse[] = { 0.05f, 0.05f, 0.6f, 1.0f };
@@ -56,30 +98,44 @@ void circle(int radius, int width)
     double PI = 3.14;
     int numPoints = 360;
     glColor3ub(253, 165, 15);
+    glPushMatrix();
+    glRotatef(90, 0,1,0);
+    GLuint texture = loadBMP_custom("/home/gin/Downloads/RoyalTartanSmall.bmp");
+//    glEnable(GL_TEXTURE_2D);
+    glBindTexture (GL_TEXTURE_2D, texture);
     glBegin(GL_POLYGON);
     for(int i = 0; i < numPoints; i++) {
         float angle = i * (2 * PI/numPoints);
-        int x = (int) (cos(angle) * radius);
-        int y = (int) (sin(angle) * radius);
-        glVertex3i(width, x, y);
-    }
+        float x = (float) (cos(angle) * radius);
+        float y = (float) (sin(angle) * radius);
+        float tx = (float) (cos(angle) * 0.5 + 0.5);
+        float ty = (float) (sin(angle) * 0.5 + 0.5);
 
+        glTexCoord2f(tx, ty);
+        glNormal3f(0,0,1);
+        glVertex2f(x, y);
+//        glVertex3f(width, x, y);
+    }
     glEnd();
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
 
 }
+
 void circles(int depth, int width, int height)
 {
     glPushMatrix();
-    glTranslatef(0,0,50);
+    glTranslatef(width+1,0,50);
     circle((int)(height * .7), width);
     glPopMatrix();
 
     glPushMatrix();
-    glTranslatef(0,0,-50);
+    glTranslatef(width+1,0,-50);
     circle((int)(height * .7), width);
     glPopMatrix();
 
 }
+
 void wheel(int radius)
 {
     glColor3ub(121,61,55);
@@ -125,6 +181,7 @@ void wheels(int depth, int width, int height)
     wheel((int)(height * .7));
     glPopMatrix();
 }
+
 void up()
 {
     int depth = 100;
@@ -133,89 +190,33 @@ void up()
 
     glPushMatrix();
     glTranslated(-100, 3*height, 0);
-    glBegin(GL_POLYGON);
-    glVertex3i(width,-height,-depth);
-    glVertex3i(-width,-height,-depth);
-    glVertex3i(-width,height,-depth);
-    glVertex3i(width,height,-depth);
-    glEnd();
+    for(int face=0; face < 6; face++)
+    {
+        glBegin(GL_POLYGON);
+        for(int vertex = 0; vertex < 4; vertex++) {
+            glNormal3f(0,0,1);
+            glVertex3i(width * faces[face][vertex][0],height* faces[face][vertex][1],depth* faces[face][vertex][2]);
+        }
+        glEnd();
 
-    glBegin(GL_POLYGON);
-    glVertex3i(width,-height,depth);
-    glVertex3i(-width,-height,depth);
-    glVertex3i(-width,height,depth);
-    glVertex3i(width,height,depth);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3i(-width,-height,depth);
-    glVertex3i(-width,-height,-depth);
-    glVertex3i(-width,height,-depth);
-    glVertex3i(-width,height,depth);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3i(width,-height,depth);
-    glVertex3i(width,-height,-depth);
-    glVertex3i(width,height,-depth);
-    glVertex3i(width,height,depth);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3i(width,-height,depth);
-    glVertex3i(width,-height,-depth);
-    glVertex3i(-width,-height,-depth);
-    glVertex3i(-width,-height,depth);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3i(width,height,depth);
-    glVertex3i(width,height,-depth);
-    glVertex3i(-width,height,-depth);
-    glVertex3i(-width,height,depth);
-    glEnd();
+    }
     glPopMatrix();
 }
 
 void body(int depth, int width, int height)
 {
     glColor3ub(0,61,55);
-    glBegin(GL_POLYGON);
-    glVertex3i(width,-height,-depth);
-    glVertex3i(-width,-height,-depth);
-    glVertex3i(-width,height,-depth);
-    glVertex3i(width,height,-depth);
-    glEnd();
+    for(int face=0; face < 6; face++)
+    {
+        glBegin(GL_POLYGON);
+        for(int vertex = 0; vertex < 4; vertex++) {
+            glNormal3f(0,0,1);
+            glVertex3i(width * faces[face][vertex][0],height* faces[face][vertex][1],depth* faces[face][vertex][2]);
+        }
+        glEnd();
 
-    glBegin(GL_POLYGON);
+    }
 
-    glVertex3i(width,-height,depth);
-    glVertex3i(-width,-height,depth);
-    glVertex3i(-width,height,depth);
-    glVertex3i(width,height,depth);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3i(-width,-height,depth);
-    glVertex3i(-width,-height,-depth);
-    glVertex3i(-width,height,-depth);
-    glVertex3i(-width,height,depth);
-    glEnd();
-
-
-    glBegin(GL_POLYGON);
-    glVertex3i(width,-height,depth);
-    glVertex3i(width,-height,-depth);
-    glVertex3i(-width,-height,-depth);
-    glVertex3i(-width,-height,depth);
-    glEnd();
-
-    glBegin(GL_POLYGON);
-    glVertex3i(width,height,depth);
-    glVertex3i(width,height,-depth);
-    glVertex3i(-width,height,-depth);
-    glVertex3i(-width,height,depth);
-    glEnd();
 }
 
 void car()
@@ -231,6 +232,11 @@ void car()
 
 }
 
+void track()
+{
+    glColor3ub(255, 0, 0);
+    gluCylinder(quadratic, screenWidth*.6,  screenWidth*.6, 100, 360, 360);
+}
 
 void display()
 {
@@ -243,14 +249,19 @@ void display()
 //    glLightfv(GL_LIGHT0, GL_POSITION, position);
 //    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
 
-    gluLookAt(1,-3,-6,0,0,0,0,1,0);
-//    gluLookAt(1,1,-6,0,0,0,0,1,0);
+    gluLookAt(1,1,-6,0,0,0,0,1,0);
 //    gluLookAt(1,1,-1,0,0,0,0,1,0); // isometric
 //    gluLookAt(1,0,0,0,0,0,0,1,0); // FRONT see lights
 //    gluLookAt(1,1,0,0,0,0,0,1,0); // TOP see car up
 //    gluLookAt(0,0,-1,0,0,0,0,1,0); // SIDE see wheel
 
     car();
+
+    glPushMatrix();
+    glTranslatef(0, -100,0);
+    glRotatef(90,1,0,0);
+    track();
+    glPopMatrix();
 
     glutSwapBuffers();
 }
@@ -267,7 +278,7 @@ int main(int argc, char **argv)
     glEnable(GL_LIGHT0);
     glEnable(GL_DEPTH_TEST);
     glutDisplayFunc(display);
-    glutDisplayFunc(display);
+    glutReshapeFunc(reshape);
     glutTimerFunc(0, timer, 0);
     glClearColor(0, 0, 0, 0.0);
     glMatrixMode(GL_PROJECTION);
@@ -278,4 +289,82 @@ int main(int argc, char **argv)
 
     glutMainLoop();
     return 0;
+}
+
+void reshape(GLint w, GLint h) {
+    glViewport(0, 0, w, h);
+    GLfloat aspect = GLfloat(w) / GLfloat(h);
+    glLoadIdentity();
+    if (w <= h) {
+        glOrtho( -screenWidth/2.0f, screenWidth/2.0f, -screenHeight/(2.0f * aspect), screenHeight/(2.0f*aspect) , -screenDepth/2.0f , screenDepth/2.0f );    glClear(GL_COLOR_BUFFER_BIT);
+
+    } else {
+        glOrtho( -screenWidth * aspect/2.0f, screenWidth * aspect/2.0f, -screenHeight/2.0f, screenHeight/2.0f , -screenDepth/2.0f , screenDepth/2.0f );    glClear(GL_COLOR_BUFFER_BIT);
+    }
+}
+
+GLuint loadBMP_custom(const char * imagepath)
+{
+    // Data read from the header of the BMP file
+    unsigned char header[54]; // Each BMP file begins by a 54-bytes header
+    unsigned int dataPos;     // Position in the file where the actual data begins
+    unsigned int width, height;
+    unsigned int imageSize;   // = width*height*3
+    // Actual RGB data
+    unsigned char * data;
+    // Open the file
+    FILE * file = fopen(imagepath,"rb");
+    if (!file){
+        printf("Image could not be opened\n");
+        return 0;
+    }
+    if ( fread(header, 1, 54, file)!=54 )
+    { // If not 54 bytes read : problem
+        printf("Not a correct BMP file\n");
+        return false;
+    }
+
+    if ( header[0]!='B' || header[1]!='M' )
+    {
+        printf("Not a correct BMP file\n");
+        return 0;
+    }
+    // Read ints from the byte array
+    dataPos    = *(int*)&(header[0x0A]);
+    imageSize  = *(int*)&(header[0x22]);
+    width      = *(int*)&(header[0x12]);
+    height     = *(int*)&(header[0x16]);
+
+    // Some BMP files are misformatted, guess missing information
+    if (imageSize==0)
+        imageSize=width*height*3; // 3 : one byte for each Red, Green and Blue component
+    if (dataPos==0)
+        dataPos=54; // The BMP header is done that way
+
+    // Create a buffer
+    data = new unsigned char [imageSize];
+
+    // Read the actual data from the file into the buffer
+    fread(data,1,imageSize,file);
+
+    //Everything is in memory now, the file can be closed
+    fclose(file);
+
+    // Create one OpenGL texture
+    GLuint textureID;
+    glGenTextures(1, &textureID);
+
+    glBindTexture( GL_TEXTURE_2D, textureID );
+    glTexEnvf( GL_TEXTURE_ENV, GL_TEXTURE_ENV_MODE,GL_MODULATE );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR_MIPMAP_NEAREST );
+
+
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_S,GL_REPEAT );
+    glTexParameterf( GL_TEXTURE_2D, GL_TEXTURE_WRAP_T,GL_REPEAT );
+    gluBuild2DMipmaps( GL_TEXTURE_2D, 3, width, height,GL_RGB, GL_UNSIGNED_BYTE, data );
+    free( data );
+
+
+    return textureID;
 }
