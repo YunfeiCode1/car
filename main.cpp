@@ -64,24 +64,21 @@ void init()
 
     GLfloat ambientLight[] = {1.0f, 1.0f, 1.0f, 1.0f};
     GLfloat diffuseLight[] = {1.0f, 1.f, 1.f, 1.0f};
-    GLfloat specularLight[] = {0.9f, 0.9f, 0.9f, 1.0f};
-    GLfloat position[] = {1.0f, 1.0f, 1.0f, 1.0f};
-    GLfloat shininess[] = {50.0f};
+    GLfloat specularLight[] = {0.1f, 0.1f, 0.1f, 1.0f};
+    GLfloat position[] = {50.0f, 1.0f, 1.0f, 1.0f};
+    GLfloat shininess[] = {10.0f};
     GLfloat mat_specular[] = { 1.0, 1.0, 1.0, 1.0 };
     GLfloat mat_shininess[] = { 50.0 };
-    GLfloat light[] = { 0.0, 0.9, 0.2 };
-    GLfloat lmodel_ambient[] = { 0.1, 0.1, 0.1, 1.0 };
-    //glShadeModel(GL_SMOOTH);
+    glShadeModel(GL_SMOOTH);
 
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
-    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
+//    glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
     glLightfv(GL_LIGHT0, GL_POSITION, position);
 
-    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight );
-//    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight );
+    glLightfv(GL_LIGHT0, GL_DIFFUSE, specularLight );
+    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight );
 
-    //glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
-    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
 
 
@@ -93,7 +90,7 @@ void timer(int)
 {
     glutPostRedisplay();
     glutTimerFunc(1000/60, timer, 0);
-    ANGLE += 0.2;
+    ANGLE += 2.5;
 }
 
 void circle(int radius, int width)
@@ -117,7 +114,6 @@ void circle(int radius, int width)
         glTexCoord2f(tx, ty);
         glNormal3f(0,0,1);
         glVertex2f(x, y);
-//        glVertex3f(width, x, y);
     }
     glEnd();
     glDisable(GL_TEXTURE_2D);
@@ -197,7 +193,7 @@ void up()
     {
         glBegin(GL_POLYGON);
         for(int vertex = 0; vertex < 4; vertex++) {
-            glNormal3f(0,0,1);
+            glNormal3f(1,0,0);
             glVertex3i(width * faces[face][vertex][0],height* faces[face][vertex][1],depth* faces[face][vertex][2]);
         }
         glEnd();
@@ -213,7 +209,7 @@ void body(int depth, int width, int height)
     {
         glBegin(GL_POLYGON);
         for(int vertex = 0; vertex < 4; vertex++) {
-            glNormal3f(0,0,1);
+            glNormal3f(1,0,0);
             glVertex3i(width * faces[face][vertex][0],height* faces[face][vertex][1],depth* faces[face][vertex][2]);
         }
         glEnd();
@@ -228,24 +224,52 @@ void car()
     int width = 250;
     int height = 60;
 
+
+    glRotatef(-90, 0,1,0);
     body(depth, width, height);
     up();
     wheels(depth, width, height);
     circles(depth, width, height);
+    glPopMatrix();
+
 
 }
 
 void track()
 {
-    glColor3ub(255, 0, 0);
-    gluCylinder(quadratic, screenWidth*.6,  screenWidth*.6, 100, 360, 360);
+    double PI = 3.14;
+    int numPoints = 360;
+    glColor3ub(253, 165, 15);
+    glPushMatrix();
+    glRotatef(90, 0,1,0);
+    GLuint texture = loadBMP_custom("/home/gin/Downloads/RoyalTartanSmall.bmp");
+//    glEnable(GL_TEXTURE_2D);
+    glBindTexture (GL_TEXTURE_2D, texture);
+    glBegin(GL_POLYGON);
+    for(int i = 0; i < numPoints; i++) {
+        float angle = i * (2 * PI/numPoints);
+        float x = (float) (cos(angle) * screenDepth *.5);
+        float y = (float) (sin(angle) * screenDepth *.5);
+        float tx = (float) (cos(angle) * 0.5 + 0.5);
+        float ty = (float) (sin(angle) * 0.5 + 0.5);
+
+        glTexCoord2f(tx, ty);
+        glNormal3f(0,0,1);
+        glVertex2f(x, y);
+
+    }
+
+    glEnd();
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
+
 }
 
 /* https://stackoverflow.com/questions/16525916/2d-texture-or-cube-mapping */
 void tree(int height, int base)
 {
 
-    GLfloat green[] = {34/255.0f,139/255.0f,34/255.0f};
+    GLfloat green[] = {100/255.0f,139/255.0f,34/255.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, green);
     GLUquadricObj *quadratic= gluNewQuadric();
     gluQuadricNormals(quadratic, GL_SMOOTH);
@@ -290,20 +314,37 @@ void display()
 //    glLightfv(GL_LIGHT0, GL_POSITION, position);
 //    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
 
-      gluLookAt(1,1,-6,0,0,0,0,1,0);
-//    gluLookAt(1,1,-1,0,0,0,0,1,0); // isometric
+//      gluLookAt(1,1,-30,0,0,0,0,1,0);
+    gluLookAt(1,1,-1,0,0,0,0,1,0); // isometric
 //    gluLookAt(1,0,0,0,0,0,0,1,0); // FRONT see lights
 //    gluLookAt(1,1,0,0,0,0,0,1,0); // TOP see car up
 //    gluLookAt(0,0,-1,0,0,0,0,1,0); // SIDE see wheel
 
-    //car();
+    glPushMatrix();
+    glTranslatef(0,100,0);
     tree(200, 100);
 
-//    glPushMatrix();
-//    glTranslatef(0, -100,0);
-//    glRotatef(90,1,0,0);
-//    track();
-//    glPopMatrix();
+    glPopMatrix();
+
+
+    float r = screenDepth*2;
+    float angle = (float)  2*PI*ANGLE/360;
+    float x = (float) (cos(angle) * r);
+    float y = (float) (sin(angle) * r);
+
+    glPushMatrix();
+    glScalef(.2,.2,.2);
+    glTranslatef(x,-375,y);
+    glRotatef(-ANGLE,0,1,0);
+    car();
+    glPopMatrix();
+
+
+    glPushMatrix();
+    glTranslatef(0, -100,0);
+    glRotatef(90,0,0,1);
+    track();
+    glPopMatrix();
 
     glutSwapBuffers();
 }
