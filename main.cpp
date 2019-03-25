@@ -52,8 +52,11 @@ GLUquadricObj *quadratic = gluNewQuadric();
 void reshape(GLint w, GLint h);
 GLuint loadBMP_custom(const char * imagepath);
 
-void init(void)
+void init()
 {
+    glEnable(GL_LIGHTING);
+    glEnable(GL_LIGHT0);
+    glEnable(GL_DEPTH_TEST);
     GLfloat lgt1_diffuse[] = { 0.05f, 0.05f, 0.6f, 1.0f };
     GLfloat lgt2_diffuse[] = { 0.6f, 0.05f, 0.05f, 1.0f };
     GLfloat light_pos1[] = { 5.0f, 5.0f, 0.0f, 1.0f };
@@ -68,7 +71,7 @@ void init(void)
     GLfloat mat_shininess[] = { 50.0 };
     GLfloat light[] = { 0.0, 0.9, 0.2 };
     GLfloat lmodel_ambient[] = { 0.1, 0.1, 0.1, 1.0 };
-    glShadeModel(GL_SMOOTH);
+    //glShadeModel(GL_SMOOTH);
 
     glMaterialfv(GL_FRONT, GL_SPECULAR, mat_specular);
     glMaterialfv(GL_FRONT, GL_SHININESS, mat_shininess);
@@ -77,15 +80,15 @@ void init(void)
     glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight );
 //    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight );
 
-    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
+    //glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
     glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
 
 
-    glEnable(GL_LIGHTING);
-    glEnable(GL_LIGHT0);
-    glEnable(GL_DEPTH_TEST);
+
 }
 
+/** https://www.youtube.com/watch?v=NT-0Q2Psp2Y */
 void timer(int)
 {
     glutPostRedisplay();
@@ -238,30 +241,69 @@ void track()
     gluCylinder(quadratic, screenWidth*.6,  screenWidth*.6, 100, 360, 360);
 }
 
+/* https://stackoverflow.com/questions/16525916/2d-texture-or-cube-mapping */
+void tree(int height, int base)
+{
+
+    GLfloat green[] = {34/255.0f,139/255.0f,34/255.0f};
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, green);
+    GLUquadricObj *quadratic= gluNewQuadric();
+    gluQuadricNormals(quadratic, GL_SMOOTH);
+    GLuint texture = loadBMP_custom("/home/gin/Downloads/bush.bmp");
+    gluQuadricTexture(quadratic , GL_TRUE);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture (GL_TEXTURE_2D, texture);
+    glPushMatrix();
+    glRotatef(-90,1,0,0);
+    gluCylinder(quadratic, base, 0, height, 360, 360);
+    glPopMatrix();
+
+    GLfloat brown[] = {139/255.0f,69/255.0f,15/255.0f};
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, brown);
+
+    GLUquadricObj *quadratic2= gluNewQuadric();
+    gluQuadricNormals(quadratic2, GL_SMOOTH);
+    texture = loadBMP_custom("/home/gin/Downloads/Barkdrk.bmp");
+    gluQuadricTexture(quadratic2 , GL_TRUE);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture (GL_TEXTURE_2D, texture);
+    glPushMatrix();
+    glTranslatef(0,-height,0);
+    glRotatef(-90,1,0,0);
+
+    gluCylinder(quadratic2, .3*base, .3*base, height, 360, 360);
+    glPopMatrix();
+    glDisable(GL_TEXTURE_2D);
+
+
+
+
+}
 void display()
 {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     glLoadIdentity();
-    init ();
+    init();
 
 //    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
 //    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
 //    glLightfv(GL_LIGHT0, GL_POSITION, position);
 //    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
 
-    gluLookAt(1,1,-6,0,0,0,0,1,0);
+      gluLookAt(1,1,-6,0,0,0,0,1,0);
 //    gluLookAt(1,1,-1,0,0,0,0,1,0); // isometric
 //    gluLookAt(1,0,0,0,0,0,0,1,0); // FRONT see lights
 //    gluLookAt(1,1,0,0,0,0,0,1,0); // TOP see car up
 //    gluLookAt(0,0,-1,0,0,0,0,1,0); // SIDE see wheel
 
-    car();
+    //car();
+    tree(200, 100);
 
-    glPushMatrix();
-    glTranslatef(0, -100,0);
-    glRotatef(90,1,0,0);
-    track();
-    glPopMatrix();
+//    glPushMatrix();
+//    glTranslatef(0, -100,0);
+//    glRotatef(90,1,0,0);
+//    track();
+//    glPopMatrix();
 
     glutSwapBuffers();
 }
@@ -303,6 +345,7 @@ void reshape(GLint w, GLint h) {
     }
 }
 
+/** https://stackoverflow.com/questions/12518111/how-to-load-a-bmp-on-glut-to-use-it-as-a-texture */
 GLuint loadBMP_custom(const char * imagepath)
 {
     // Data read from the header of the BMP file
