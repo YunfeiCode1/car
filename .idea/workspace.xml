@@ -37,12 +37,11 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/main.cpp">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6050">
-              <caret line="315" lean-forward="true" selection-start-line="315" selection-end-line="315" />
+            <state relative-caret-position="358">
+              <caret line="299" column="34" lean-forward="true" selection-start-line="299" selection-start-column="34" selection-end-line="299" selection-end-column="34" />
               <folding>
                 <element signature="e#0#19#0" expanded="true" />
-                <element signature="e#3611#4087#0" />
-                <element signature="e#4089#4630#0" />
+                <element signature="e#10175#12403#0" />
               </folding>
             </state>
           </provider>
@@ -54,6 +53,8 @@
     <findStrings>
       <find>track</find>
       <find>car</find>
+      <find>PI</find>
+      <find>trac</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -67,11 +68,11 @@
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="865" />
-    <option name="y" value="27" />
-    <option name="width" value="1055" />
-    <option name="height" value="1053" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="67" />
+    <option name="y" value="25" />
+    <option name="width" value="1045" />
+    <option name="height" value="789" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -79,7 +80,6 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -91,6 +91,7 @@
           <select />
         </subPane>
       </pane>
+      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -143,27 +144,30 @@
       <workItem from="1553491233423" duration="248000" />
       <workItem from="1553518372973" duration="4828000" />
       <workItem from="1553528185348" duration="3947000" />
+      <workItem from="1553574037499" duration="3004000" />
+      <workItem from="1553579422399" duration="1297000" />
+      <workItem from="1553586754459" duration="6887000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="47723000" />
+    <option name="totallyTimeSpent" value="58911000" />
   </component>
   <component name="ToolWindowManager">
-    <frame x="865" y="27" width="1055" height="1053" extended-state="0" />
+    <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.27552032" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16214721" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info anchor="bottom" id="Run" order="2" weight="0.051948052" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.05723542" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.39935064" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
       <window_info anchor="bottom" id="Database Changes" order="7" />
-      <window_info anchor="bottom" id="Messages" order="8" weight="0.32683983" />
+      <window_info anchor="bottom" id="Messages" order="8" weight="0.325054" />
       <window_info anchor="bottom" id="Terminal" order="9" />
       <window_info anchor="bottom" id="Event Log" order="10" side_tool="true" />
       <window_info anchor="bottom" id="Version Control" order="11" />
@@ -177,6 +181,17 @@
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="1" />
   </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/main.cpp</url>
+          <line>399</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
   <component name="editorHistoryManager">
     <entry file="file:///usr/include/GL/gl.h">
       <provider selected="true" editor-type-id="text-editor">
@@ -184,6 +199,9 @@
           <caret line="283" column="8" selection-start-line="283" selection-start-column="8" selection-end-line="283" selection-end-column="8" />
         </state>
       </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/headlight.bmp">
+      <provider selected="true" editor-type-id="images" />
     </entry>
     <entry file="file://$PROJECT_DIR$/airbrushbw.bmp">
       <provider selected="true" editor-type-id="images" />
@@ -197,12 +215,11 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/main.cpp">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6050">
-          <caret line="315" lean-forward="true" selection-start-line="315" selection-end-line="315" />
+        <state relative-caret-position="358">
+          <caret line="299" column="34" lean-forward="true" selection-start-line="299" selection-start-column="34" selection-end-line="299" selection-end-column="34" />
           <folding>
             <element signature="e#0#19#0" expanded="true" />
-            <element signature="e#3611#4087#0" />
-            <element signature="e#4089#4630#0" />
+            <element signature="e#10175#12403#0" />
           </folding>
         </state>
       </provider>

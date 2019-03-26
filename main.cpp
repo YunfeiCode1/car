@@ -1,12 +1,15 @@
 #include<GL/glut.h>
 #include<cmath>
 #include <cstdio>
-
+#include "iostream"
+#include <png.h>
+#include <stdlib.h>
+#include <stdio.h>
 
 int screenWidth = 800;
 int screenHeight = 800;
 int screenDepth = 600;
-double PI = 3.14;
+float PI = 3.14;
 float ANGLE = 0.0f;
 
 int faces[6][4][3] = {
@@ -48,7 +51,6 @@ int faces[6][4][3] = {
         }
 };
 
-GLUquadricObj *quadratic = gluNewQuadric();
 void reshape(GLint w, GLint h);
 GLuint loadBMP_custom(const char * imagepath);
 
@@ -95,14 +97,10 @@ void timer(int)
 
 void circle(int radius, int width)
 {
-    double PI = 3.14;
     int numPoints = 360;
     glColor3ub(253, 165, 15);
     glPushMatrix();
     glRotatef(90, 0,1,0);
-    GLuint texture = loadBMP_custom("/home/gin/Downloads/RoyalTartanSmall.bmp");
-//    glEnable(GL_TEXTURE_2D);
-    glBindTexture (GL_TEXTURE_2D, texture);
     glBegin(GL_POLYGON);
     for(int i = 0; i < numPoints; i++) {
         float angle = i * (2 * PI/numPoints);
@@ -116,7 +114,6 @@ void circle(int radius, int width)
         glVertex2f(x, y);
     }
     glEnd();
-    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
 }
@@ -215,7 +212,6 @@ void body(int depth, int width, int height)
         glEnd();
 
     }
-
 }
 
 void car()
@@ -237,30 +233,46 @@ void car()
 
 void track()
 {
-    double PI = 3.14;
-    int numPoints = 360;
-    glColor3ub(253, 165, 15);
+    float radian, x, y, xcos, ysin;
+    float radius = screenDepth * 0.5f;
+
     glPushMatrix();
     glRotatef(90, 0,1,0);
-    GLuint texture = loadBMP_custom("/home/gin/Downloads/RoyalTartanSmall.bmp");
-//    glEnable(GL_TEXTURE_2D);
-    glBindTexture (GL_TEXTURE_2D, texture);
     glBegin(GL_POLYGON);
-    for(int i = 0; i < numPoints; i++) {
-        float angle = i * (2 * PI/numPoints);
-        float x = (float) (cos(angle) * screenDepth *.5);
-        float y = (float) (sin(angle) * screenDepth *.5);
-        float tx = (float) (cos(angle) * 0.5 + 0.5);
-        float ty = (float) (sin(angle) * 0.5 + 0.5);
+    for (int angle=0; angle < 360; angle+=1)
+    {
+        radian = angle * (PI/180.0f);
+        xcos = (float)cos(radian);
+        ysin = (float)sin(radian);
+        x = xcos * radius;
+        y = ysin * radius;
 
-        glTexCoord2f(tx, ty);
+        glColor3ub(14, 14, 14);
         glNormal3f(0,0,1);
         glVertex2f(x, y);
 
     }
+    glEnd();
+
+    glColor3ub(85,107,47);
+    GLuint texture = loadBMP_custom("bush.bmp");
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture (GL_TEXTURE_2D, texture);
+    glBegin(GL_POLYGON);
+    for (int angle=0; angle < 360; angle+=1)
+    {
+        radian = angle * (PI/180.0f);
+        xcos = (float)cos(radian);
+        ysin = (float)sin(radian);
+        x = xcos * radius * .5f;
+        y = ysin * radius * .5f;
+
+        glNormal3f(0,0,1);
+        glTexCoord2f(xcos * .5f + .5f, ysin * .5f + .5f);
+        glVertex3f(x, y, 1);
+    }
 
     glEnd();
-    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
 }
@@ -268,12 +280,13 @@ void track()
 /* https://stackoverflow.com/questions/16525916/2d-texture-or-cube-mapping */
 void tree(int height, int base)
 {
+    glColor3ub(100, 139, 34);
 
-    GLfloat green[] = {100/255.0f,139/255.0f,34/255.0f};
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, green);
+//    GLfloat green[] = {100/255.0f,139/255.0f,34/255.0f};
+//    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, green);
     GLUquadricObj *quadratic= gluNewQuadric();
     gluQuadricNormals(quadratic, GL_SMOOTH);
-    GLuint texture = loadBMP_custom("/home/gin/Downloads/bush.bmp");
+    GLuint texture = loadBMP_custom("bush.bmp");
     gluQuadricTexture(quadratic , GL_TRUE);
     glEnable(GL_TEXTURE_2D);
     glBindTexture (GL_TEXTURE_2D, texture);
@@ -282,12 +295,14 @@ void tree(int height, int base)
     gluCylinder(quadratic, base, 0, height, 360, 360);
     glPopMatrix();
 
-    GLfloat brown[] = {139/255.0f,69/255.0f,15/255.0f};
-    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, brown);
+    glColor3ub(139, 69, 15);
+
+//    GLfloat brown[] = {139/255.0f,69/255.0f,15/255.0f};
+//    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, brown);
 
     GLUquadricObj *quadratic2= gluNewQuadric();
     gluQuadricNormals(quadratic2, GL_SMOOTH);
-    texture = loadBMP_custom("/home/gin/Downloads/Barkdrk.bmp");
+    texture = loadBMP_custom("Barkdrk.bmp");
     gluQuadricTexture(quadratic2 , GL_TRUE);
     glEnable(GL_TEXTURE_2D);
     glBindTexture (GL_TEXTURE_2D, texture);
@@ -309,21 +324,15 @@ void display()
     glLoadIdentity();
     init();
 
-//    glLightfv(GL_LIGHT0, GL_AMBIENT, ambientLight);
-//    glLightfv(GL_LIGHT0, GL_SPECULAR, specularLight);
-//    glLightfv(GL_LIGHT0, GL_POSITION, position);
-//    glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuseLight);
-
 //      gluLookAt(1,1,-30,0,0,0,0,1,0);
-    gluLookAt(1,1,-1,0,0,0,0,1,0); // isometric
+//    gluLookAt(1,1,-1,0,0,0,0,1,0); // isometric
 //    gluLookAt(1,0,0,0,0,0,0,1,0); // FRONT see lights
-//    gluLookAt(1,1,0,0,0,0,0,1,0); // TOP see car up
+    gluLookAt(1,1,0,0,0,0,0,1,0); // TOP see car up
 //    gluLookAt(0,0,-1,0,0,0,0,1,0); // SIDE see wheel
 
     glPushMatrix();
     glTranslatef(0,100,0);
     tree(200, 100);
-
     glPopMatrix();
 
 
@@ -452,3 +461,7 @@ GLuint loadBMP_custom(const char * imagepath)
 
     return textureID;
 }
+
+
+
+
