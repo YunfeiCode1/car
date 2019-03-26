@@ -11,10 +11,7 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="92ef32a9-7726-410d-9d9b-5c5a80671b2c" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Barkdrk.jpg" beforeDir="false" />
-    </list>
+    <list default="true" id="92ef32a9-7726-410d-9d9b-5c5a80671b2c" name="Default Changelist" comment="" />
     <ignored path="$PROJECT_DIR$/cmake-build-debug/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -149,16 +146,17 @@
       <workItem from="1553586754459" duration="6887000" />
       <workItem from="1553593963754" duration="38000" />
       <workItem from="1553594249893" duration="11000" />
+      <workItem from="1553595016682" duration="34000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="58960000" />
+    <option name="totallyTimeSpent" value="58994000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="67" y="25" width="1853" height="1055" extended-state="6" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16546762" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.16712783" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
